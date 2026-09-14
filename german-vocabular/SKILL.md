@@ -1,169 +1,367 @@
-German Literature Vocabulary Extractor
 
-Purpose
+---
+name: german-literature-vocabulary
+description: Extracts unfamiliar and useful German vocabulary from literary texts and translates it into the learner's native language.
+---
 
-Given a fragment of German literary text, identify vocabulary that may be unfamiliar or difficult for the learner and provide translations into the learner's native language.
+# German Literature Vocabulary
 
-The goal is to create a useful vocabulary list for understanding the given literary fragment, not to translate the entire text.
+## Purpose
 
-Input
+Analyze a provided fragment of German literary text and extract vocabulary that is likely to be unfamiliar or useful for a German learner.
 
-The user provides:
+For every selected word or expression, provide its translation into the learner's native language and explain its meaning in the context of the text when necessary.
 
-1. A fragment of German fiction/literature.
-2. Optionally, their native language.
-3. Optionally, their German proficiency level.
+The goal is **vocabulary acquisition and text comprehension**, not full text translation.
 
-If the native language is not explicitly specified, use the language in which the user communicates with the assistant.
+---
 
-Instructions
+## Input
 
-1. Analyze the text
+The user provides a fragment of German literary text.
 
-Read the entire provided fragment and identify words or expressions that are likely to be unfamiliar to a German learner.
+The user may also provide:
+
+- their native language;
+- their German proficiency level;
+- a list of words they already know;
+- a maximum number of vocabulary items.
+
+If the native language is not explicitly specified, use the language the user is communicating in.
+
+---
+
+## Vocabulary Selection
+
+Read the entire provided text before selecting vocabulary.
+
+Select words and expressions that are likely to be unfamiliar to the learner.
 
 Prioritize:
 
-- uncommon nouns;
-- literary or formal vocabulary;
-- verbs that are uncommon or have a non-obvious meaning;
-- adjectives and adverbs important for understanding the text;
-- idiomatic expressions;
-- colloquial expressions;
-- words whose meaning differs significantly from their most common English/German-learning meaning;
-- separable or irregular verbs when their meaning may be unclear;
-- words whose meaning can only be understood from context;
-- important recurring vocabulary.
+1. Words essential for understanding the text.
+2. Uncommon but useful vocabulary.
+3. Literary or formal vocabulary.
+4. Colloquial vocabulary.
+5. Idiomatic expressions.
+6. Words whose meaning depends strongly on context.
+7. Words that have an unintuitive meaning for German learners.
 
-Do NOT include every difficult-looking word.
+Prefer vocabulary that is actually useful for learning German rather than simply selecting words that look complicated.
 
-2. Exclude unnecessary vocabulary
+### Do not include
 
 Do not include:
 
-- very basic German words;
+- very basic German vocabulary;
 - common articles, pronouns, conjunctions and prepositions;
-- obvious words that a learner at the specified level should already know;
+- obvious grammatical words;
 - proper names;
 - place names;
+- duplicate words;
 - words whose meaning is completely obvious from context;
-- duplicate words.
+- words that the user explicitly listed as known.
 
-If the same word occurs multiple times, list it only once.
+Do not artificially fill the vocabulary list.
 
-3. Normalize words
+---
 
-Give vocabulary in its dictionary/base form:
+## Vocabulary Normalization
 
-- nouns → nominative singular + article;
-- verbs → infinitive;
-- adjectives → basic form;
-- adverbs → basic form;
-- fixed expressions → preserve the complete expression.
+Convert words to their dictionary/base form.
+
+### Nouns
+
+Use:
+
+```text
+Artikel + Nominativ Singular
 
 Examples:
 
-"ging" → "gehen"
+Häusern → das Haus
+Straßen → die Straße
+Mannes → der Mann
 
-"Häusern" → "das Haus"
+Verbs
 
-"betrat" → "betreten"
+Use the infinitive.
 
-"ängstlich" → "ängstlich"
+Examples:
 
-4. Use the context
+ging → gehen
+betrat → betreten
+sah → sehen
 
-The translation must correspond to the meaning of the word in the given literary fragment.
+For separable verbs, preserve the complete infinitive:
 
-If a word has multiple possible meanings, choose the contextual meaning.
+sah ... an → ansehen
 
-If the contextual meaning is ambiguous, provide the most likely translation and briefly indicate the alternative meaning.
+Adjectives and adverbs
 
-Do not blindly use the first dictionary translation.
+Use the basic form:
 
-5. Literary expressions
+kleinen → klein
+schneller → schnell
 
-For idioms and expressions, translate the meaning of the whole expression, rather than translating each word separately.
+Expressions
+
+Keep fixed expressions in their natural dictionary form.
 
 Example:
 
-"jemandem den Rücken kehren"
+jemandem den Rücken kehren
 
-→ "повернутися до когось спиною; відвернутися від когось"
 
-rather than translating the individual words literally.
+---
 
-6. Output format
+Contextual Meaning
 
-Return a table:
+Always translate according to the meaning in the provided text.
 
-Deutsch| Перевод| Bedeutung im Kontext
-der ...| ...| ...
-...| ...| ...
+Do not blindly provide the first dictionary translation.
 
-The "Bedeutung im Kontext" column should be short. Use it only when the translation alone could be ambiguous.
+If a word has several meanings, select the meaning that fits the context.
 
-For simple words, the third column may contain "—".
+If the meaning is ambiguous, provide the most likely translation and briefly mention the alternative.
 
-7. Amount of vocabulary
+Example:
 
-Normally select approximately 10–25 words or expressions per fragment.
+ziehen → идти / тянуть
 
-The exact number depends on the text:
+If the text clearly uses ziehen in the sense of moving to another place:
 
-- short/easy fragment → fewer words;
-- long/difficult fragment → more words;
-- very difficult literary text → up to 30 words.
+ziehen → переезжать
+
+
+---
+
+Idioms and Fixed Expressions
+
+For idioms, translate the meaning of the entire expression rather than translating individual words literally.
+
+Example:
+
+jemandem den Rücken kehren
+→ отвернуться от кого-либо; отречься от кого-либо
+
+Do not produce:
+
+Rücken → спина
+kehren → подметать
+
+when the expression itself is what matters.
+
+
+---
+
+Recommended Amount
+
+Normally extract:
+
+5–15 items from a short fragment;
+
+10–25 items from a normal fragment;
+
+up to 30 items from a long or particularly difficult fragment.
+
+
+The number is flexible.
 
 Quality is more important than quantity.
 
-8. Difficulty prioritization
+If the fragment is easy, return fewer words.
 
-Prefer vocabulary according to this approximate priority:
 
-1. Essential for understanding the fragment
-2. Uncommon but useful vocabulary
-3. Literary/formal vocabulary
-4. Useful idioms and expressions
-5. Interesting but non-essential vocabulary
+---
 
-Do not artificially fill the list to reach a target number.
+Difficulty
 
-9. Context examples
+Prefer words that are plausibly above the learner's current vocabulary level.
 
-Do not reproduce long portions of the original literary text.
+When the learner's German level is known, use it.
 
-If an example is necessary, use only a very short phrase from the supplied fragment.
+For example:
 
-10. Final section
+A1–A2 → mostly A2–B1 vocabulary.
 
-After the table, provide:
+B1 → mostly B1–B2 vocabulary.
 
-Wichtigste Wörter:
-A short list of approximately 5 especially important words from the fragment.
+B2 → mostly B2–C1 vocabulary.
 
-Then, if useful:
+C1 → advanced, literary and context-specific vocabulary.
 
-Ausdrücke:
-A separate short list of important idioms or fixed expressions.
+
+Do not include difficult words solely because they are long.
+
+
+---
+
+Output Format
+
+Return the result using the following structure:
+
+Vokabeln
+
+Deutsch	Übersetzung	Bedeutung im Kontext
+
+das Beispielwort	translation	short contextual explanation
+der Ausdruck	translation	short contextual explanation
+
+
+The translation must be in the learner's native language.
+
+Keep explanations concise.
+
+Use — when no additional contextual explanation is necessary.
+
+
+---
+
+Important Vocabulary
+
+After the main table, provide the most important vocabulary from the fragment:
+
+Wichtigste Wörter
+
+word — translation
+
+word — translation
+
+word — translation
+
+word — translation
+
+word — translation
+
+
+Select approximately 3–7 words.
+
+These should be the words that are most useful for understanding the fragment.
+
+
+---
+
+Expressions
+
+If the text contains useful idioms or fixed expressions, add:
+
+Ausdrücke
+
+German expression — translation
+
+German expression — translation
+
+
+Do not create this section if there are no meaningful expressions.
+
+
+---
+
+Known Vocabulary
+
+If the user provides a list of words they already know, never include those words in the vocabulary list.
+
+Normalize the comparison when possible.
+
+For example, if the known-word list contains:
+
+gehen
+Haus
+sehen
+
+then exclude:
+
+ging
+Häuser
+sah
+
+because they are forms of already-known words.
+
+
+---
+
+Duplicates
+
+Each vocabulary item should appear only once.
+
+If a word occurs multiple times in the text, select it only once.
+
+
+---
+
+Original Text
+
+Do not reproduce the entire literary fragment.
+
+Only refer to short phrases from the user's provided text when necessary to explain context.
+
+
+---
+
+Accuracy Rules
+
+Before producing the answer, verify:
+
+1. Every selected word actually occurs in the provided text.
+
+
+2. The normalized form is correct.
+
+
+3. The grammatical category is correct.
+
+
+4. The translation matches the context.
+
+
+5. Idioms are translated as expressions rather than word-by-word.
+
+
+6. Duplicate words are removed.
+
+
+7. Basic vocabulary is not unnecessarily included.
+
+
+8. Words explicitly marked as known by the user are excluded.
+
+
+
+
+---
 
 Example
 
-Input:
+Input
 
-«Der alte Mann schlenderte schweigend durch die menschenleere Straße. Ein kalter Wind pfiff zwischen den Häusern, während er immer wieder verstohlen über seine Schulter blickte.»
+Der alte Mann schlenderte schweigend durch die menschenleere Straße.
+Ein kalter Wind pfiff zwischen den Häusern, während er immer wieder
+verstohlen über seine Schulter blickte.
 
-Output:
+Output
 
-Deutsch| Перевод| Bedeutung im Kontext
-schlendern| неторопливо идти, прогуливаться| идти медленно и расслабленно
-menschenleer| безлюдный| где нет людей
-pfeifen| свистеть| о звуке ветра
-verstohlen| украдкой, исподтишка| стараясь, чтобы никто не заметил
-über die Schulter blicken| оглядываться через плечо| смотреть назад
+Vokabeln
 
-Wichtigste Wörter:
-"schlendern", "menschenleer", "verstohlen"
+Deutsch	Übersetzung	Bedeutung im Kontext
 
-Ausdrücke:
-"über die Schulter blicken" — оглядываться через плечо
+schlendern	идти не спеша, прогуливаться	медленно и спокойно идти
+schweigend	молча	не произнося ни слова
+menschenleer	безлюдный	где нет людей
+pfeifen	свистеть	о звуке ветра
+verstohlen	украдкой, тайком	так, чтобы никто не заметил
+über die Schulter blicken	оглядываться через плечо	смотреть назад
+
+
+Wichtigste Wörter
+
+schlendern — идти не спеша
+
+menschenleer — безлюдный
+
+verstohlen — украдкой
+
+
+Ausdrücke
+
+über die Schulter blicken — оглядываться через плечо
