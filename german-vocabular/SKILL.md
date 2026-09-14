@@ -1,4 +1,3 @@
-
 ---
 name: german-literature-vocabulary
 description: Extracts unfamiliar and useful German vocabulary from literary texts and translates it into the learner's native language.
